@@ -2,7 +2,8 @@
 
 import 'package:api_shopping/controller/Mycart_controller.dart';
 import 'package:api_shopping/controller/Productdetailscontroller.dart';
-import 'package:api_shopping/view/my%20cart/my%20cart.dart';
+import 'package:api_shopping/view/cart_screen/cartScreen.dart';
+import 'package:api_shopping/view/cart_screen/widget/cartwidgetitem.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -68,6 +69,7 @@ class _ProductdetailsState extends State<Productdetails> {
         body: Consumer<Productdetailscontroller>(
             builder: (context, productDetailsController, child) =>
                 productDetailsController.isloading
+                
                     ? Center(child: CircularProgressIndicator())
                     : Column(children: [
                         Expanded(
@@ -240,24 +242,15 @@ class _ProductdetailsState extends State<Productdetails> {
                               child: InkWell(
                                 onTap: () {
                                   context.read<MycartController>().Addproduct(productDetailsController.product!);
-                                  context.read<MycartController>().getAllproduct();
-                                   Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) => Cartwidgetitem.cartwdgetitem(
-                                      title: "title",
-                                      desc: "desc",
-                                      qty: "qty",
-                                      image: productdetailscontroller.product!.image.toString(),
-                                      onDecrement: () {
-                                        
-                                      },
-                                      onIncrement: () {
-                                        
-                                      },
-                                      onRemove: () {
-                                        
-                                      },
+                                  
+                                  
+                                  
+                                    Navigator.push(context,
+                                     MaterialPageRoute(builder: (context) => CartScreen(
+                                      
 
-                                    ),));
+                                     ),
+                                    ));
                                 },
                                 child: Container(
                                   padding: EdgeInsets.symmetric(

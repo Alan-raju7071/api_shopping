@@ -10,6 +10,7 @@ import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
 
 class MycartController with ChangeNotifier{
   static late Database mydatabase;
+  double totalvalue=0.00;
   List<Map<String,dynamic>> storedproduct=[];
   
   Future initdb() async {
@@ -30,18 +31,36 @@ if (kIsWeb) {
     var storedproduct= await mydatabase.rawQuery('SELECT * FROM mycart');
      log(storedproduct.toString());
   }
+
+
+
+
+
  Future Addproduct(productmodel selectedproduct) async {
-    await mydatabase.rawInsert(
-      'INSERT INTO mycart(name, qty,desc, image) VALUES(?, ?, ?,?)',
-      [selectedproduct.title,1,selectedproduct.description,selectedproduct.image]);
+   
+      await getAllproduct();
+      bool alreadyincart=storedproduct.any((element) => selectedproduct.id == element["productid"],);
+      if (alreadyincart){
+        
+      }else{
+         await mydatabase.rawInsert(
+      'INSERT INTO mycart(name, qty,amount, image,productId) VALUES(?, ?, ?,?,?)',
+      [selectedproduct.title,1,selectedproduct.price,selectedproduct.image,selectedproduct.id]);
+      }
   
 }
+
+
+
+
+
 Future   removeproduct(int productId) async {
   await mydatabase
     .rawDelete('DELETE FROM mycart WHERE id = ?', [productId]);
 getAllproduct();
 
 }
+
 incrementqty( {required int currentqty,required int id})  {
    mydatabase.rawUpdate(
     'UPDATE mycart SET qty = ?, id = ? ',
@@ -53,4 +72,16 @@ decrementqty({required int currentqty,required int id}){
     [--currentqty,id]);
   
 }
+void calculatetotalamount(){
+  totalvalue=0.00;
+  for (var element in storedproduct){
+    totalvalue=totalvalue+(element["qty"]*element["amount"]);
+  }
+  
+}
+Future <void> cleartable()async{
+  await mydatabase.delete("mycart");
+}
+
+
   }
